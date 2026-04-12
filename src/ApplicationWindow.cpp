@@ -2,6 +2,7 @@
 #include <time.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <cstring>
 #include <unistd.h>
 
 #include "window/ApplicationWindow.h"
@@ -55,17 +56,14 @@ int ApplicationWindow::allocate_shm_file(size_t size) {
 void ApplicationWindow::registry_handle_global(void *data, struct wl_registry *registry, uint32_t name, const char *interface, uint32_t version) {
 	printf("interface: '%s', version: %d, name: %d\n", interface, version, name);
 
-    if (interface == wl_compositor_interface.name) {
+    if (strcmp(interface, wl_compositor_interface.name) == 0) {
         compositor = (wl_compositor*) wl_registry_bind(registry, name, &wl_compositor_interface, 4);
-    } else if (interface == wl_shm_interface.name) {
+    } else if (strcmp(interface, wl_shm_interface.name) == 0) {
         shm = (wl_shm*) wl_registry_bind(registry, name, &wl_shm_interface, 1);
-    } else if (interface == xdg_wm_base_interface.name) {
-        
+    } else if (strcmp(interface,  xdg_wm_base_interface.name) == 0) {
         wm_base = (xdg_wm_base*) wl_registry_bind(registry, name, &xdg_wm_base_interface, 1);
 
         xdg_wm_base_add_listener(wm_base, &base_listener, data);
-    } else if (interface == xdg_surface_interface.name) {
-        xdg_surface_add_listener(xdg_surface, &surface_listener, data);
     }
 }
 
@@ -83,6 +81,11 @@ void ApplicationWindow::xdg_surface_configure(void* data, struct xdg_surface* xd
     struct wl_buffer *buffer = draw_frame();
     wl_surface_attach(wl_surface, buffer, 0, 0);
     wl_surface_commit(wl_surface);
+}
+
+void ApplicationWindow::wl_buffer_release(void* data, wl_buffer* buffer) {
+    /* Sent by the compositor when it's no longer using this buffer */
+    wl_buffer_destroy(buffer);
 }
 
 wl_buffer* ApplicationWindow::draw_frame() {
@@ -144,6 +147,9 @@ bool ApplicationWindow::init() {
 
     this->wl_surface = wl_compositor_create_surface(this->compositor);
     this->xdg_surface = xdg_wm_base_get_xdg_surface(this->wm_base, this->wl_surface);
+
+    // data parameter is not used since handler is a member function
+    xdg_surface_add_listener(this->xdg_surface, &surface_listener, this);
 
     this->toplevel = xdg_surface_get_toplevel(this->xdg_surface);
     xdg_toplevel_set_title(this->toplevel, this->window_title.c_str());

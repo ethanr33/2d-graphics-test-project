@@ -5,7 +5,6 @@ project(2dRenderer)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-
 add_executable(out)
 add_library(2d-renderer)
 add_library(xdg-shell)
@@ -50,13 +49,13 @@ target_sources(2d-renderer
 
 target_sources(out
     PRIVATE 
-        main.cpp
         ${WAYLAND_INCLUDE_DIRS}
+        main.cpp
 )
 
 target_link_libraries(out
     PRIVATE
-        xdg-shell
         2d-renderer
+        xdg-shell
         ${WAYLAND_LIBRARIES}
 )
