@@ -28,6 +28,7 @@ target_sources(2d-renderer
     PRIVATE
         src/Renderer.cpp
         src/ApplicationWindow.cpp
+        src/FrameBuffer.cpp
 
     PUBLIC 
         FILE_SET HEADERS 

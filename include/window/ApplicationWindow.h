@@ -1,5 +1,9 @@
+
 #include <wayland-client.h>
 #include <string>
+#include <vector>
+
+#include "FrameBuffer.h"
 
 #include "../external/xdg-shell/xdg-shell-client-protocol.h"
 
@@ -23,6 +27,12 @@ class ApplicationWindow {
         xdg_surface_listener surface_listener;
         xdg_wm_base_listener base_listener;
         wl_buffer_listener buffer_listener;
+        wl_callback_listener callback_listener;
+
+        uint32_t last_frame = 0;
+        uint32_t offset = 0;
+
+        FrameBuffer* frame_buffer;
 
         friend void registry_handle_global(void*, wl_registry*, uint32_t, const char*, uint32_t);
         friend void registry_handle_global_remove(void*, wl_registry*, uint32_t);
@@ -32,19 +42,20 @@ class ApplicationWindow {
 
         friend void wl_buffer_release(void*, wl_buffer*);
 
+        friend void wl_surface_frame_done(void*, struct wl_callback*, uint32_t);
+
         wl_buffer* draw_frame();
 
     public:
-        ApplicationWindow(int, int, const std::string&);
+        ApplicationWindow(int, int, const std::string&, FrameBuffer*);
 
         ApplicationWindow(const ApplicationWindow&) = delete;
 
         bool init();
-
-        void draw();
         bool dispatch();
-
         void disconnect();
+
+        void attach_frame_buffer(FrameBuffer*);
 
         ~ApplicationWindow();
 };

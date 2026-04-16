@@ -6,6 +6,7 @@
 #include "transformations/TransformationManager.h"
 #include "rasterizer/Rasterizer.h"
 #include "FrameBuffer.h"
+#include "window/ApplicationWindow.h"
 
 class Renderer {
     private:
@@ -18,8 +19,12 @@ class Renderer {
         
         FrameBuffer front_buffer;
         FrameBuffer back_buffer;
+
+        ApplicationWindow app_window;
     public:
-        Renderer(int width, int height) : display_width(width), display_height(height), front_buffer(width, height), back_buffer(width, height) {} 
+        Renderer(int width, int height) : display_width(width), display_height(height), front_buffer(width, height), back_buffer(width, height), app_window(display_width, display_height, "Default title", &front_buffer) {
+            app_window.init();
+        } 
 
         /**
          * @brief Clears back frame buffer, resets command stream
@@ -35,4 +40,9 @@ class Renderer {
          * @brief Updates front frame buffer with the most recent primitives added since last clear()
         */
         void display();
+
+        /**
+         * @brief Returns true if the renderer is still active
+         */
+        bool is_active() const;
 };

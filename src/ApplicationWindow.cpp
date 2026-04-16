@@ -82,7 +82,7 @@ void xdg_surface_configure(void* data, struct xdg_surface* xdg_surface, uint32_t
     ApplicationWindow* app = (ApplicationWindow*) data;
 
     struct wl_buffer *buffer = app->draw_frame();
-    wl_surface_attach(app->wl_surface, buffer, 0, 0);
+    wl_surface_attach(app->wl_surface, buffer, app->width, app->height);
     wl_surface_commit(app->wl_surface);
 }
 
@@ -91,9 +91,23 @@ void wl_buffer_release(void* data, wl_buffer* buffer) {
     wl_buffer_destroy(buffer);
 }
 
+void wl_surface_frame_done(void* data, struct wl_callback* callback, uint32_t time) {
+    wl_callback_destroy(callback);
+
+    ApplicationWindow* app = (ApplicationWindow*) data;
+
+    callback = wl_surface_frame(app->wl_surface);
+    wl_callback_add_listener(callback, &app->callback_listener, app);
+
+    struct wl_buffer* buffer = app->draw_frame();
+    wl_surface_attach(app->wl_surface, buffer, 0, 0);
+    wl_surface_damage_buffer(app->wl_surface, 0, 0, INT32_MAX, INT32_MAX);
+    wl_surface_commit(app->wl_surface);
+}
+
 wl_buffer* ApplicationWindow::draw_frame() {
-    int stride = width * 4;
-    int size = stride * height;
+    int stride = this->width * 4;
+    int size = stride * this->height;
 
     int fd = allocate_shm_file(size);
     if (fd == -1) {
@@ -114,10 +128,7 @@ wl_buffer* ApplicationWindow::draw_frame() {
     /* Draw checkerboxed background */
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            if ((x + y / 8 * 8) % 16 < 8)
-                data[y * width + x] = 0xFF666666;
-            else
-                data[y * width + x] = 0xFFEE0000;
+            data[this->width * y + x] = frame_buffer->get_frame_buffer().at(y).at(x).to_hex();
         }
     }
 
@@ -126,7 +137,7 @@ wl_buffer* ApplicationWindow::draw_frame() {
     return buffer;
 }
 
-ApplicationWindow::ApplicationWindow(int width, int height, const std::string& window_title) {
+ApplicationWindow::ApplicationWindow(int width, int height, const std::string& window_title, FrameBuffer* fb) {
     this->width = width;
     this->height = height;
     this->window_title = window_title;
@@ -134,6 +145,8 @@ ApplicationWindow::ApplicationWindow(int width, int height, const std::string& w
     this->display = nullptr;
     this->registry = nullptr;
     this->compositor = nullptr;
+
+    this->frame_buffer = fb;
 
     this->registry_listener = {
         .global = registry_handle_global,
@@ -150,6 +163,10 @@ ApplicationWindow::ApplicationWindow(int width, int height, const std::string& w
 
     this->buffer_listener = {
         .release = wl_buffer_release
+    };
+
+    this->callback_listener = {
+        .done = wl_surface_frame_done
     };
 
 }
@@ -175,11 +192,12 @@ bool ApplicationWindow::init() {
     this->toplevel = xdg_surface_get_toplevel(this->xdg_surface);
     xdg_toplevel_set_title(this->toplevel, this->window_title.c_str());
 
-    return true;
-}
-
-void ApplicationWindow::draw() {
     wl_surface_commit(this->wl_surface);
+
+    struct wl_callback* cb = wl_surface_frame(this->wl_surface);
+    wl_callback_add_listener(cb, &callback_listener, this);
+
+    return true;
 }
 
 bool ApplicationWindow::dispatch() {
@@ -190,6 +208,10 @@ void ApplicationWindow::disconnect() {
     if (this->display) {
         wl_display_disconnect(this->display);
     }
+}
+
+void ApplicationWindow::attach_frame_buffer(FrameBuffer* fb) {
+    this->frame_buffer = fb;
 }
 
 ApplicationWindow::~ApplicationWindow() {
