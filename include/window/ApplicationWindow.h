@@ -1,11 +1,15 @@
+#pragma once
 
 #include <wayland-client.h>
 #include <string>
 #include <vector>
 
 #include "FrameBuffer.h"
+#include "utils/SignalHandler.h"
 
 #include "../external/xdg-shell/xdg-shell-client-protocol.h"
+
+enum class EVENT_TYPE { MOUSE_PRESSED_EVENT };
 
 class ApplicationWindow {
     private:
@@ -32,7 +36,9 @@ class ApplicationWindow {
         uint32_t last_frame = 0;
         uint32_t offset = 0;
 
-        FrameBuffer* frame_buffer;
+        const FrameBuffer* frame_buffer;
+
+        SignalHandler<int, int> mouse_pressed_handler;
 
         friend void registry_handle_global(void*, wl_registry*, uint32_t, const char*, uint32_t);
         friend void registry_handle_global_remove(void*, wl_registry*, uint32_t);
@@ -47,12 +53,12 @@ class ApplicationWindow {
         wl_buffer* draw_frame();
 
     public:
-        ApplicationWindow(int, int, const std::string&, FrameBuffer*);
+        ApplicationWindow(int, int, const std::string&, const FrameBuffer*);
 
         ApplicationWindow(const ApplicationWindow&) = delete;
 
         bool init();
-        bool dispatch();
+        bool dispatch() const;
         void disconnect();
 
         void attach_frame_buffer(FrameBuffer*);

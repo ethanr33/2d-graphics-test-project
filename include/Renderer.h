@@ -19,12 +19,8 @@ class Renderer {
         
         FrameBuffer front_buffer;
         FrameBuffer back_buffer;
-
-        ApplicationWindow app_window;
     public:
-        Renderer(int width, int height) : display_width(width), display_height(height), front_buffer(width, height), back_buffer(width, height), app_window(display_width, display_height, "Default title", &front_buffer) {
-            app_window.init();
-        } 
+        Renderer(int width, int height) : display_width(width), display_height(height), front_buffer(width, height), back_buffer(width, height) {}
 
         /**
          * @brief Clears back frame buffer, resets command stream
@@ -42,7 +38,7 @@ class Renderer {
         void display();
 
         /**
-         * @brief Returns true if the renderer is still active
+         * @brief Gets front buffer for rendering
          */
-        bool is_active() const;
+        const FrameBuffer* get_front_buffer() const;
 };

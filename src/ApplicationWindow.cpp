@@ -125,7 +125,6 @@ wl_buffer* ApplicationWindow::draw_frame() {
     wl_shm_pool_destroy(pool);
     close(fd);
 
-    /* Draw checkerboxed background */
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             data[this->width * y + x] = frame_buffer->get_frame_buffer().at(y).at(x).to_hex();
@@ -137,7 +136,7 @@ wl_buffer* ApplicationWindow::draw_frame() {
     return buffer;
 }
 
-ApplicationWindow::ApplicationWindow(int width, int height, const std::string& window_title, FrameBuffer* fb) {
+ApplicationWindow::ApplicationWindow(int width, int height, const std::string& window_title, const FrameBuffer* fb) {
     this->width = width;
     this->height = height;
     this->window_title = window_title;
@@ -200,7 +199,7 @@ bool ApplicationWindow::init() {
     return true;
 }
 
-bool ApplicationWindow::dispatch() {
+bool ApplicationWindow::dispatch() const {
     return wl_display_dispatch(this->display);
 }
 

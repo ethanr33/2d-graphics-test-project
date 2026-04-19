@@ -29,7 +29,7 @@ target_sources(2d-renderer
         src/Renderer.cpp
         src/ApplicationWindow.cpp
         src/FrameBuffer.cpp
-
+        src/Engine.cpp
     PUBLIC 
         FILE_SET HEADERS 
         BASE_DIRS 
@@ -37,6 +37,7 @@ target_sources(2d-renderer
         FILES 
             include/Renderer.h
             include/FrameBuffer.h
+            include/Engine.h
             include/command_processing/Command.h
             include/command_processing/CommandProcessor.h
             include/command_processing/CommandStream.h
@@ -46,11 +47,12 @@ target_sources(2d-renderer
             include/rasterizer/Rasterizer.h
             include/transformations/ViewportTransformation.h
             include/window/ApplicationWindow.h
+            include/utils/SignalHandler.h
 )
 
 target_sources(out
     PRIVATE 
-        ${WAYLAND_INCLUDE_DIRS}
+        ${WAYLAND_CLIENT_INCLUDE_DIR}
         main.cpp
 )
 
@@ -58,5 +60,5 @@ target_link_libraries(out
     PRIVATE
         2d-renderer
         xdg-shell
-        ${WAYLAND_LIBRARIES}
+        ${WAYLAND_CLIENT_LIBRARY}
 )
