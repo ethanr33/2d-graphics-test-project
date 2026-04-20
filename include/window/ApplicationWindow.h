@@ -6,6 +6,7 @@
 
 #include "FrameBuffer.h"
 #include "utils/SignalHandler.h"
+#include "window/MouseEvent.h"
 
 #include "../external/xdg-shell/xdg-shell-client-protocol.h"
 
@@ -25,6 +26,9 @@ class ApplicationWindow {
         xdg_wm_base* wm_base;
         xdg_toplevel* toplevel;
 
+        wl_seat* seat;
+        wl_pointer* pointer;
+
         std::string window_title;
 
         wl_registry_listener registry_listener;
@@ -32,13 +36,14 @@ class ApplicationWindow {
         xdg_wm_base_listener base_listener;
         wl_buffer_listener buffer_listener;
         wl_callback_listener callback_listener;
-
-        uint32_t last_frame = 0;
-        uint32_t offset = 0;
+        wl_seat_listener seat_listener;
+        wl_pointer_listener pointer_listener;
 
         const FrameBuffer* frame_buffer;
 
-        SignalHandler<int, int> mouse_pressed_handler;
+        MouseState mouse_state;
+
+        SignalHandler<MouseState> mouse_pressed_handler;
 
         friend void registry_handle_global(void*, wl_registry*, uint32_t, const char*, uint32_t);
         friend void registry_handle_global_remove(void*, wl_registry*, uint32_t);
@@ -49,6 +54,14 @@ class ApplicationWindow {
         friend void wl_buffer_release(void*, wl_buffer*);
 
         friend void wl_surface_frame_done(void*, struct wl_callback*, uint32_t);
+
+        friend void wl_seat_capabilities(void*, struct wl_seat*, uint32_t);
+
+        friend void wl_pointer_enter(void*, struct wl_pointer*, uint32_t, struct wl_surface*, wl_fixed_t, wl_fixed_t);
+        friend void wl_pointer_leave(void*, struct wl_pointer*, uint32_t, struct wl_surface*);
+        friend void wl_pointer_motion(void*, struct wl_pointer*, uint32_t, wl_fixed_t, wl_fixed_t);
+        friend void wl_pointer_button(void*, struct wl_pointer*, uint32_t, uint32_t, uint32_t, uint32_t);
+        friend void wl_pointer_frame(void*, struct wl_pointer*);
 
         wl_buffer* draw_frame();
 

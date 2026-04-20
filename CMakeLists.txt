@@ -47,6 +47,7 @@ target_sources(2d-renderer
             include/rasterizer/Rasterizer.h
             include/transformations/ViewportTransformation.h
             include/window/ApplicationWindow.h
+            include/window/MouseEvent.h
             include/utils/SignalHandler.h
 )
 

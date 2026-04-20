@@ -65,6 +65,9 @@ void registry_handle_global(void* data, struct wl_registry *registry, uint32_t n
         app->wm_base = (xdg_wm_base*) wl_registry_bind(registry, name, &xdg_wm_base_interface, 1);
 
         xdg_wm_base_add_listener(app->wm_base, &app->base_listener, app);
+    } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+        app->seat = (wl_seat*) wl_registry_bind(registry, name, &wl_seat_interface, 7);
+        wl_seat_add_listener(app->seat, &app->seat_listener, app);
     }
 }
 
@@ -104,6 +107,51 @@ void wl_surface_frame_done(void* data, struct wl_callback* callback, uint32_t ti
     wl_surface_damage_buffer(app->wl_surface, 0, 0, INT32_MAX, INT32_MAX);
     wl_surface_commit(app->wl_surface);
 }
+
+void wl_seat_capabilities(void* data, wl_seat* seat, uint32_t capabilities) {
+    bool has_pointer = capabilities & WL_SEAT_CAPABILITY_POINTER;
+
+    ApplicationWindow* app = (ApplicationWindow*) data;
+
+    if (has_pointer && app->pointer == nullptr) {
+        // If a pointer is available on the seat and the pointer has not been added yet
+        app->pointer = wl_seat_get_pointer(seat);
+        wl_pointer_add_listener(app->pointer, &app->pointer_listener, app);
+    } else if (!has_pointer && app->pointer != nullptr) {
+        // If a pointer available is no longer available
+        wl_pointer_release(app->pointer);
+        app->pointer = nullptr;
+    }
+}
+
+void wl_seat_name(void* data, wl_seat* seat, const char* name) {
+    // Deliberately left empty
+}
+
+void wl_pointer_enter(void* data, struct wl_pointer* pointer, uint32_t serial, struct wl_surface* surface, wl_fixed_t surface_x, wl_fixed_t surface_y) {
+
+}
+
+void wl_pointer_leave(void* data, struct wl_pointer* pointer, uint32_t serial, struct wl_surface *surface) {
+
+}
+
+void wl_pointer_motion(void* data, struct wl_pointer* pointer, uint32_t time, wl_fixed_t surface_x, wl_fixed_t surface_y) {
+
+}
+
+void wl_pointer_button(void* data, wl_pointer* pointer, uint32_t serial, uint32_t time, uint32_t button, uint32_t state) {
+    ApplicationWindow* app = (ApplicationWindow*) data;
+
+    if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
+        app->mouse_pressed_handler.invoke(MouseState(app->mouse_state.x, app->mouse_state.y));
+    }
+}
+
+void wl_pointer_frame(void* data, struct wl_pointer* pointer) {
+
+}
+
 
 wl_buffer* ApplicationWindow::draw_frame() {
     int stride = this->width * 4;
@@ -166,6 +214,19 @@ ApplicationWindow::ApplicationWindow(int width, int height, const std::string& w
 
     this->callback_listener = {
         .done = wl_surface_frame_done
+    };
+
+    this->seat_listener = {
+        .capabilities = wl_seat_capabilities,
+        .name = wl_seat_name
+    };
+
+    this->pointer_listener = {
+        .enter = wl_pointer_enter,
+        .leave = wl_pointer_leave,
+        .motion = wl_pointer_motion,
+        .button = wl_pointer_button,
+        .frame = wl_pointer_frame
     };
 
 }

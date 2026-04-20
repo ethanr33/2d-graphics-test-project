@@ -3,8 +3,8 @@
 
 int main() {
 
-    int width = 1000;
-    int height = 500;
+    int width = 600;
+    int height = 600;
 
     Engine e{width, height};
 
