@@ -129,7 +129,10 @@ void wl_seat_name(void* data, wl_seat* seat, const char* name) {
 }
 
 void wl_pointer_enter(void* data, struct wl_pointer* pointer, uint32_t serial, struct wl_surface* surface, wl_fixed_t surface_x, wl_fixed_t surface_y) {
+    ApplicationWindow* app = (ApplicationWindow*) data;
 
+    app->mouse_state.x = wl_fixed_to_int(surface_x);
+    app->mouse_state.y = wl_fixed_from_int(surface_y);
 }
 
 void wl_pointer_leave(void* data, struct wl_pointer* pointer, uint32_t serial, struct wl_surface *surface) {
@@ -137,14 +140,17 @@ void wl_pointer_leave(void* data, struct wl_pointer* pointer, uint32_t serial, s
 }
 
 void wl_pointer_motion(void* data, struct wl_pointer* pointer, uint32_t time, wl_fixed_t surface_x, wl_fixed_t surface_y) {
+    ApplicationWindow* app = (ApplicationWindow*) data;
 
+    app->mouse_state.x = wl_fixed_to_int(surface_x);
+    app->mouse_state.y = wl_fixed_to_int(surface_y);
 }
 
 void wl_pointer_button(void* data, wl_pointer* pointer, uint32_t serial, uint32_t time, uint32_t button, uint32_t state) {
     ApplicationWindow* app = (ApplicationWindow*) data;
 
     if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
-        app->mouse_pressed_handler.invoke(MouseState(app->mouse_state.x, app->mouse_state.y));
+        app->mouse_pressed_handler.invoke(app->mouse_state);
     }
 }
 
@@ -182,6 +188,10 @@ wl_buffer* ApplicationWindow::draw_frame() {
     munmap(data, size);
     wl_buffer_add_listener(buffer, &buffer_listener, NULL);
     return buffer;
+}
+
+SignalHandler<MouseState>* ApplicationWindow::get_mouse_pressed_handler() {
+    return &this->mouse_pressed_handler;
 }
 
 ApplicationWindow::ApplicationWindow(int width, int height, const std::string& window_title, const FrameBuffer* fb) {

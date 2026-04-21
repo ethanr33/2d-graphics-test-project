@@ -23,4 +23,9 @@ class Engine {
          * @brief Gets if engine is active and running
          */
         bool is_active() const;
+
+        /**
+         * @brief Adds a event handler for the corresponding event type
+         */
+        void add_event_handler(EVENT_TYPE, std::function<void(MouseState)>);
 };

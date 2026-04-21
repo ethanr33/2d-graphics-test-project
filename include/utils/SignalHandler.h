@@ -12,7 +12,7 @@ class SignalHandler {
          * @brief Add a slot to handler
          */
         void connect(std::function<void(Args...)> fn) {
-            slots.add(fn);
+            slots.push_back(fn);
         }
 
         /**

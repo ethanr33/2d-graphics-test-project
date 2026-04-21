@@ -76,5 +76,7 @@ class ApplicationWindow {
 
         void attach_frame_buffer(FrameBuffer*);
 
+        SignalHandler<MouseState>* get_mouse_pressed_handler();
+
         ~ApplicationWindow();
 };
