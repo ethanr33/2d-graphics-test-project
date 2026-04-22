@@ -31,6 +31,7 @@ target_sources(2d-renderer
         src/FrameBuffer.cpp
         src/Engine.cpp
         src/TransformationManager.cpp
+        src/Rasterizer.cpp
     PUBLIC 
         FILE_SET HEADERS 
         BASE_DIRS 

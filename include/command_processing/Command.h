@@ -4,6 +4,7 @@
 #include <variant>
 
 #include "primitives/Primitive.h"
+#include "utils/Color.h"
 
 class AddPrimitiveCommand {
     private:

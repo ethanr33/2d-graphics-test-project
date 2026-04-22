@@ -5,6 +5,10 @@ void Engine::tick() {
     this->renderer.display();
 }
 
+void Engine::draw(Primitive p) {
+    renderer.add_primitive(p);
+}
+
 bool Engine::is_active() const {
     return this->app_window.dispatch() != -1;
 }

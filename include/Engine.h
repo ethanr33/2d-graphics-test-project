@@ -20,6 +20,11 @@ class Engine {
         void tick();
 
         /**
+         * @brief Draws a primitive
+         */
+        void draw(Primitive);
+
+        /**
          * @brief Gets if engine is active and running
          */
         bool is_active() const;

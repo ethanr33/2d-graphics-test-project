@@ -29,11 +29,8 @@ class Renderer {
 
         /**
          * @brief Adds a new primitive to command stream
-         * Overloaded methods for Vertex, Line, Triangle
          */
-        void add_primitive(Vertex);
-        void add_primitive(Vertex, Vertex);
-        void add_primitive(Vertex, Vertex, Vertex);
+        void add_primitive(Primitive);
 
         /**
          * @brief Updates front frame buffer with the most recent primitives added since last clear()

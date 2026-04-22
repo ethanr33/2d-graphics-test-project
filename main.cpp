@@ -2,11 +2,12 @@
 #include <iostream>
 
 #include "Engine.h"
+#include "primitives/Point.h"
 
 int main() {
 
-    int width = 600;
-    int height = 600;
+    int width = 100;
+    int height = 100;
 
     Engine e{width, height};
 
@@ -15,6 +16,13 @@ int main() {
     });
 
     while (e.is_active()) {
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                e.draw(Point(Vertex(j, i)));
+            }
+        }
+
         e.tick();
     }
 
