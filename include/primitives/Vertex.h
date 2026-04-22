@@ -5,4 +5,6 @@
 
 struct Vertex {
     Vector pos;
+
+    Vertex(int x, int y) : pos{x, y} {}
 };

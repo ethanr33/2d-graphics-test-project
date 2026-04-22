@@ -1,21 +1,32 @@
 
 #pragma once
 
-#include "CommandProcessor.h"
+#include <variant>
 
-enum class COMMAND_TYPE { ADD_PRIMITIVE };
+#include "primitives/Primitive.h"
 
-class Command {
+class AddPrimitiveCommand {
     private:
-        COMMAND_TYPE type;
+        Primitive primitive;
     public:
-        Command(COMMAND_TYPE type): type(type) {}
+        AddPrimitiveCommand(const std::vector<Vertex> vertices, PRIMITIVE_TYPE type) : primitive(vertices, type) {}
 
-        COMMAND_TYPE get_type() const;
-        virtual void process_geometry(CommandProcessor&) = 0;
+        Primitive& get_primitive() {
+            return primitive;
+        }
+
+        const Primitive& get_primitive() const {
+            return primitive;
+        }
+
+        void apply_transformation(const ViewportTransformation&);
 };
 
-class AddPrimitiveCommand : public Command {
+class ClearCommand {
+    private:
+        Color clear_color;
     public:
-        AddPrimitiveCommand() : Command(COMMAND_TYPE::ADD_PRIMITIVE) {}
+        ClearCommand(Color color) : clear_color(color) {}
 };
+
+using Command = std::variant<AddPrimitiveCommand, ClearCommand>;

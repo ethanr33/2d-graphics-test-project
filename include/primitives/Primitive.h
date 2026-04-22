@@ -12,7 +12,9 @@ class Primitive {
         std::vector<Vertex> vertices;
         PRIMITIVE_TYPE type;
     public:
+        Primitive(const std::vector<Vertex>& vertices, PRIMITIVE_TYPE type) : vertices(vertices), type(type) {}
+
         PRIMITIVE_TYPE get_type() const;
         const std::vector<Vertex>& get_vertices() const;
-        virtual void transform_vertices() = 0;
+        void transform_vertices(const ViewportTransformation&);
 };

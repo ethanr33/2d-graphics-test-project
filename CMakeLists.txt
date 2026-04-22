@@ -30,6 +30,7 @@ target_sources(2d-renderer
         src/ApplicationWindow.cpp
         src/FrameBuffer.cpp
         src/Engine.cpp
+        src/TransformationManager.cpp
     PUBLIC 
         FILE_SET HEADERS 
         BASE_DIRS 
@@ -39,7 +40,6 @@ target_sources(2d-renderer
             include/FrameBuffer.h
             include/Engine.h
             include/command_processing/Command.h
-            include/command_processing/CommandProcessor.h
             include/command_processing/CommandStream.h
             include/primitives/Primitive.h
             include/primitives/Vertex.h

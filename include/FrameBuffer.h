@@ -12,6 +12,7 @@ class FrameBuffer {
         std::vector<std::vector<Color>> frame_buffer;
     public:
         FrameBuffer(int width, int height): width(width), height(height), frame_buffer(height, std::vector<Color>(width)) {}
+        FrameBuffer(const FrameBuffer& buffer) : width(buffer.width), height(buffer.height), frame_buffer(buffer.frame_buffer) {}
 
         void update_pixel(int, int, Color);
 
