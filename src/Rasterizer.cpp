@@ -1,8 +1,10 @@
 
 #include <cstdlib>
+#include <omp.h>
 
 #include "rasterizer/Rasterizer.h"
 #include "utils/Visitor.h"
+#include "FrameBuffer.h"
 
 void Rasterizer::make_fragments(const std::vector<Command>& commands) {
     for (const Command& c : commands) {
@@ -15,7 +17,7 @@ void Rasterizer::make_fragments(const std::vector<Command>& commands) {
                         this->fragments.push_back(Fragment(
                             command.get_primitive().get_vertices().at(0).pos.x,
                             command.get_primitive().get_vertices().at(0).pos.y,
-                            Color(rand() % 256, rand() % 256, rand() % 256)
+                            Color(255, 0, 255)
                         ));
                         break;
                     default:
@@ -30,7 +32,9 @@ void Rasterizer::make_fragments(const std::vector<Command>& commands) {
 }
 
 void Rasterizer::update_frame_buffer(FrameBuffer& buffer) {
-    for (const Fragment& fragment : this->fragments) {
+    #pragma omp parallel for
+    for (int i = 0; i < this->fragments.size(); i++) {
+        Fragment fragment = this->fragments.at(i);
         buffer.update_pixel(fragment.x, fragment.y, fragment.color);
     }
 }

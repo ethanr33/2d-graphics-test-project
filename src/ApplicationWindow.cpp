@@ -181,7 +181,7 @@ wl_buffer* ApplicationWindow::draw_frame() {
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            data[this->width * y + x] = frame_buffer->get_frame_buffer().at(y).at(x).to_hex();
+            data[this->width * y + x] = frame_buffer->get_frame_buffer().at(this->width * y + x).to_hex();
         }
     }
 

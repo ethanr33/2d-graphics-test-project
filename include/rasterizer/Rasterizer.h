@@ -3,9 +3,9 @@
 
 #include <vector>
 
+#include "FrameBuffer.h"
 #include "command_processing/Command.h"
 #include "rasterizer/Fragment.h"
-#include "FrameBuffer.h"
 
 class Rasterizer {
     private:

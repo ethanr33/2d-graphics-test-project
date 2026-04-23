@@ -9,12 +9,14 @@ class FrameBuffer {
         int width;
         int height;
 
-        std::vector<std::vector<Color>> frame_buffer;
+        std::vector<Color> frame_buffer;
     public:
-        FrameBuffer(int width, int height): width(width), height(height), frame_buffer(height, std::vector<Color>(width)) {}
+        FrameBuffer(int width, int height): width(width), height(height), frame_buffer(height * width) {}
         FrameBuffer(const FrameBuffer& buffer) : width(buffer.width), height(buffer.height), frame_buffer(buffer.frame_buffer) {}
 
-        void update_pixel(int, int, Color);
+        inline void update_pixel(int x_pos, int y_pos, Color c) {
+            this->frame_buffer[width * y_pos + x_pos] = c;
+        }
 
-        const std::vector<std::vector<Color>>& get_frame_buffer() const;
+        const std::vector<Color>& get_frame_buffer() const;
 };
