@@ -18,6 +18,10 @@ class CommandStream {
             stream.push_back(ClearCommand(color));
         }
 
+        void reset() {
+            stream.clear();
+        }
+
         std::vector<Command>& get_command_stream() {
             return stream;
         }

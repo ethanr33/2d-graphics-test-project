@@ -21,4 +21,9 @@ class Rasterizer {
          * Only modifies pixels specified in the fragments vector, other pixels will remain untouched
          */
         void update_frame_buffer(FrameBuffer& buffer);
+
+        /**
+         * @brief Resets rasterizer state for next frame
+         */
+        void reset();
 };

@@ -7,8 +7,8 @@
 
 int main() {
 
-    int width = 500;
-    int height = 500;
+    int width = 1000;
+    int height = 1000;
 
     Engine e{width, height};
 

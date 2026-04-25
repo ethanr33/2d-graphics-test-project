@@ -5,7 +5,7 @@ project(2dRenderer)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-add_compile_options(-O3 -g -fopenmp)
+add_compile_options(-O3 -g)
 
 add_executable(out)
 add_library(2d-renderer)

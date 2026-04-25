@@ -10,6 +10,8 @@ void Renderer::display() {
     rasterizer.make_fragments(command_stream.get_command_stream());
     rasterizer.update_frame_buffer(back_buffer);
 
+    rasterizer.reset();
+    command_stream.reset();
 }
 
 

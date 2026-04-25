@@ -32,9 +32,12 @@ void Rasterizer::make_fragments(const std::vector<Command>& commands) {
 }
 
 void Rasterizer::update_frame_buffer(FrameBuffer& buffer) {
-    #pragma omp parallel for
     for (int i = 0; i < this->fragments.size(); i++) {
         Fragment fragment = this->fragments.at(i);
         buffer.update_pixel(fragment.x, fragment.y, fragment.color);
     }
+}
+
+void Rasterizer::reset() {
+    this->fragments.clear();
 }
