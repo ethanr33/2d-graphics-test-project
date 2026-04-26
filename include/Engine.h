@@ -22,7 +22,7 @@ class Engine {
         /**
          * @brief Draws a primitive
          */
-        void draw(Primitive);
+        void draw(const Primitive&);
 
         /**
          * @brief Gets if engine is active and running

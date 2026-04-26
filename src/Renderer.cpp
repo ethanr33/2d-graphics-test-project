@@ -19,7 +19,7 @@ void Renderer::clear() {
     command_stream.add_clear_command(Color(0, 0, 0));
 }
 
-void Renderer::add_primitive(Primitive p) {
+void Renderer::add_primitive(const Primitive& p) {
     command_stream.add_primitive(p);
 }
 

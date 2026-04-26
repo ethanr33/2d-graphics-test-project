@@ -5,7 +5,7 @@ void Engine::tick() {
     this->renderer.display();
 }
 
-void Engine::draw(Primitive p) {
+void Engine::draw(const Primitive& p) {
     renderer.add_primitive(p);
 }
 

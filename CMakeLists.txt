@@ -5,7 +5,7 @@ project(2dRenderer)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-add_compile_options(-O3 -g)
+add_compile_options(-O2 -g -fno-omit-frame-pointer)
 
 add_executable(out)
 add_library(2d-renderer)
@@ -38,20 +38,21 @@ target_sources(2d-renderer
         FILE_SET HEADERS 
         BASE_DIRS 
             include
-        FILES 
+        FILES
+            include/Engine.h
             include/Renderer.h
             include/FrameBuffer.h
-            include/Engine.h
+            include/transformations/TransformationManager.h
             include/command_processing/Command.h
             include/command_processing/CommandStream.h
             include/primitives/Primitive.h
             include/primitives/Vertex.h
             include/rasterizer/Fragment.h
             include/rasterizer/Rasterizer.h
-            include/transformations/ViewportTransformation.h
             include/window/ApplicationWindow.h
             include/window/MouseEvent.h
             include/utils/SignalHandler.h
+            include/transformations/ViewportTransformation.h
 )
 
 target_sources(out

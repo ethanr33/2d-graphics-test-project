@@ -1,22 +1,24 @@
 
 #include <cstdlib>
-#include <omp.h>
+#include <vector>
 
 #include "rasterizer/Rasterizer.h"
 #include "utils/Visitor.h"
 #include "FrameBuffer.h"
+#include "primitives/Vertex.h"
 
 void Rasterizer::make_fragments(const std::vector<Command>& commands) {
     for (const Command& c : commands) {
         std::visit(overloaded {
             [this](const AddPrimitiveCommand& command) {
                 PRIMITIVE_TYPE ptype = command.get_primitive().get_type();
+                Vertex v1 = command.get_primitive().get_vertices();
 
                 switch (ptype) {
                     case PRIMITIVE_TYPE::POINT:
                         this->fragments.push_back(Fragment(
-                            command.get_primitive().get_vertices().at(0).pos.x,
-                            command.get_primitive().get_vertices().at(0).pos.y,
+                            v1.pos.x,
+                            v1.pos.y,
                             Color(255, 0, 255)
                         ));
                         break;

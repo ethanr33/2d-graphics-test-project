@@ -10,7 +10,7 @@ class AddPrimitiveCommand {
     private:
         Primitive primitive;
     public:
-        AddPrimitiveCommand(const std::vector<Vertex> vertices, PRIMITIVE_TYPE type) : primitive(vertices, type) {}
+        AddPrimitiveCommand(PRIMITIVE_TYPE type, Vertex v1) : primitive(type, v1) {}
 
         Primitive& get_primitive() {
             return primitive;

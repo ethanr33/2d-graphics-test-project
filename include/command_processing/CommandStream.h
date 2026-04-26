@@ -10,8 +10,8 @@ class CommandStream {
 
         void clear();
     public:
-        void add_primitive(Primitive p) {
-            stream.push_back(AddPrimitiveCommand({p.get_vertices().at(0)}, PRIMITIVE_TYPE::POINT));
+        void add_primitive(const Primitive& p) {
+            stream.push_back(AddPrimitiveCommand(PRIMITIVE_TYPE::POINT, p.get_vertices()));
         }
 
         void add_clear_command(Color color) {

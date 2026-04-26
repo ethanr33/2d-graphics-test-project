@@ -3,18 +3,14 @@
 #include <chrono>
 
 #include "Engine.h"
-#include "primitives/Point.h"
+#include "transformations/TransformationManager.h"
 
 int main() {
 
-    int width = 1000;
-    int height = 1000;
+    int width = 1920;
+    int height = 1080;
 
     Engine e{width, height};
-
-    e.add_event_handler(EVENT_TYPE::MOUSE_PRESSED_EVENT, [](MouseState state){
-        std::cout << state.x << " " << state.y << std::endl;
-    });
 
     int frame_count = 0;
 
@@ -24,7 +20,7 @@ int main() {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                e.draw(Point(Vertex(j, i)));
+                e.draw(Primitive(PRIMITIVE_TYPE::POINT, Vertex(j, i)));
             }
         }
 

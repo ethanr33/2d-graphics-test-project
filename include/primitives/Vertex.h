@@ -6,5 +6,6 @@
 struct Vertex {
     Vector pos;
 
-    Vertex(int x, int y) : pos{x, y} {}
+    Vertex(double x, double y) : pos{x, y} {}
+    Vertex(const Vertex& v) : pos(v.pos) {} 
 };

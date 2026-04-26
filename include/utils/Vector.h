@@ -4,8 +4,8 @@
 #include "transformations/ViewportTransformation.h"
 
 struct Vector {
-    int x;
-    int y;
+    double x;
+    double y;
 
     void apply_transformation(ViewportTransformation&);
 };

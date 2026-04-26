@@ -30,7 +30,7 @@ class Renderer {
         /**
          * @brief Adds a new primitive to command stream
          */
-        void add_primitive(Primitive);
+        void add_primitive(const Primitive&);
 
         /**
          * @brief Updates front frame buffer with the most recent primitives added since last clear()
