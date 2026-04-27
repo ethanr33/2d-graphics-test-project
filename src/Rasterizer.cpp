@@ -7,36 +7,18 @@
 #include "FrameBuffer.h"
 #include "primitives/Vertex.h"
 
-void Rasterizer::make_fragments(const std::vector<Command>& commands) {
+void Rasterizer::make_and_render_fragments(const std::vector<Command>& commands, FrameBuffer& buffer) {
     for (const Command& c : commands) {
-        std::visit(overloaded {
-            [this](const AddPrimitiveCommand& command) {
-                PRIMITIVE_TYPE ptype = command.get_primitive().get_type();
-                Vertex v1 = command.get_primitive().get_vertices();
+        PRIMITIVE_TYPE ptype = c.get_primitive().type;
+        Vertex v1 = c.get_primitive().v1;
 
-                switch (ptype) {
-                    case PRIMITIVE_TYPE::POINT:
-                        this->fragments.push_back(Fragment(
-                            v1.pos.x,
-                            v1.pos.y,
-                            Color(255, 0, 255)
-                        ));
-                        break;
-                    default:
-                        break;
-                }
-            },
-            [](const ClearCommand& command) {
-                // TODO
-            }
-        }, c);
-    }
-}
-
-void Rasterizer::update_frame_buffer(FrameBuffer& buffer) {
-    for (int i = 0; i < this->fragments.size(); i++) {
-        Fragment fragment = this->fragments.at(i);
-        buffer.update_pixel(fragment.x, fragment.y, fragment.color);
+        switch (ptype) {
+            case PRIMITIVE_TYPE::POINT:
+                buffer.update_pixel(v1.pos.x, v1.pos.y, Color(0, 255, 0));
+                break;
+            default:
+                break;
+        }
     }
 }
 

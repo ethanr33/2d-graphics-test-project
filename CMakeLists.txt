@@ -30,7 +30,6 @@ target_sources(2d-renderer
     PRIVATE
         src/Renderer.cpp
         src/ApplicationWindow.cpp
-        src/FrameBuffer.cpp
         src/Engine.cpp
         src/TransformationManager.cpp
         src/Rasterizer.cpp

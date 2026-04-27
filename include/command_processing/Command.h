@@ -10,7 +10,7 @@ class AddPrimitiveCommand {
     private:
         Primitive primitive;
     public:
-        AddPrimitiveCommand(PRIMITIVE_TYPE type, Vertex v1) : primitive(type, v1) {}
+        AddPrimitiveCommand(const Primitive& p) : primitive(p) {}
 
         Primitive& get_primitive() {
             return primitive;
@@ -23,11 +23,4 @@ class AddPrimitiveCommand {
         void apply_transformation(const ViewportTransformation&);
 };
 
-class ClearCommand {
-    private:
-        Color clear_color;
-    public:
-        ClearCommand(Color color) : clear_color(color) {}
-};
-
-using Command = std::variant<AddPrimitiveCommand, ClearCommand>;
+using Command = AddPrimitiveCommand;

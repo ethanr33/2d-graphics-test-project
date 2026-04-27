@@ -12,15 +12,13 @@ class Rasterizer {
         std::vector<Fragment> fragments;
     public:
         /**
-         * @brief Turn a list of primitives into a list of fragments, which specify which pixels are colored what.
+         * @brief Given an AddPrimitiveCommand
          */
-        void make_fragments(const std::vector<Command>&);
 
         /**
-         * @brief Updates a frame buffer with rasterized fragments
-         * Only modifies pixels specified in the fragments vector, other pixels will remain untouched
+         * @brief Turn a list of primitives into fragments, which which are then rendered onto the frame buffer.
          */
-        void update_frame_buffer(FrameBuffer& buffer);
+        void make_and_render_fragments(const std::vector<Command>&, FrameBuffer& buffer);
 
         /**
          * @brief Resets rasterizer state for next frame

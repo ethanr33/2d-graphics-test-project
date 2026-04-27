@@ -15,8 +15,10 @@ class FrameBuffer {
         FrameBuffer(const FrameBuffer& buffer) : width(buffer.width), height(buffer.height), frame_buffer(buffer.frame_buffer) {}
 
         inline void update_pixel(int x_pos, int y_pos, Color c) {
-            this->frame_buffer[width * y_pos + x_pos] = c;
+            this->frame_buffer.at(width * y_pos + x_pos) = c;
         }
 
-        const std::vector<Color>& get_frame_buffer() const;
+        inline const std::vector<Color>& get_frame_buffer() const {
+            return this->frame_buffer;
+        }
 };

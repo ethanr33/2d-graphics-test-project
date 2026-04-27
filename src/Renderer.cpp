@@ -7,16 +7,13 @@ void Renderer::display() {
     front_buffer = back_buffer;
 
     transformation_manager.apply_transformations(command_stream.get_command_stream());
-    rasterizer.make_fragments(command_stream.get_command_stream());
-    rasterizer.update_frame_buffer(back_buffer);
-
-    rasterizer.reset();
-    command_stream.reset();
+    rasterizer.make_and_render_fragments(command_stream.get_command_stream(), this->back_buffer);
 }
 
 
 void Renderer::clear() {
-    command_stream.add_clear_command(Color(0, 0, 0));
+    rasterizer.reset();
+    command_stream.reset();
 }
 
 void Renderer::add_primitive(const Primitive& p) {
