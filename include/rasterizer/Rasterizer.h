@@ -12,10 +12,6 @@ class Rasterizer {
         std::vector<Fragment> fragments;
     public:
         /**
-         * @brief Given an AddPrimitiveCommand
-         */
-
-        /**
          * @brief Turn a list of primitives into fragments, which which are then rendered onto the frame buffer.
          */
         void make_and_render_fragments(const std::vector<Command>&, FrameBuffer& buffer);
