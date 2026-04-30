@@ -8,8 +8,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 add_compile_options(-O2 -g -fno-omit-frame-pointer)
 
 add_executable(out)
+add_executable(test)
+
 add_library(2d-renderer)
 add_library(xdg-shell)
+add_library(doctest)
+
+set_target_properties(doctest PROPERTIES LINKER_LANGUAGE CXX)
 
 find_package(Wayland REQUIRED)
 
@@ -25,33 +30,38 @@ target_sources(xdg-shell
             external/xdg-shell/xdg-shell-client-protocol.h
 )
 
+target_sources(doctest
+    PRIVATE 
+        test/doctest.cpp
+
+    PUBLIC 
+        FILE_SET HEADERS 
+        BASE_DIRS
+            test
+        FILES
+            test/doctest.h
+)
+
+file(GLOB_RECURSE RENDERER-SOURCES "./src/*.cpp")
+file(GLOB_RECURSE RENDERER-HEADERS "./include/*.h")
 
 target_sources(2d-renderer
     PRIVATE
-        src/Renderer.cpp
-        src/ApplicationWindow.cpp
-        src/Engine.cpp
-        src/TransformationManager.cpp
-        src/Rasterizer.cpp
+        ${RENDERER-SOURCES}
     PUBLIC 
         FILE_SET HEADERS 
         BASE_DIRS 
             include
         FILES
-            include/Engine.h
-            include/Renderer.h
-            include/FrameBuffer.h
-            include/transformations/TransformationManager.h
-            include/command_processing/Command.h
-            include/command_processing/CommandStream.h
-            include/primitives/Primitive.h
-            include/primitives/Vertex.h
-            include/rasterizer/Fragment.h
-            include/rasterizer/Rasterizer.h
-            include/window/ApplicationWindow.h
-            include/window/MouseEvent.h
-            include/utils/SignalHandler.h
-            include/transformations/ViewportTransformation.h
+            ${RENDERER_HEADERS}
+)
+
+file(GLOB_RECURSE RENDERER-TEST-SOURCES "./test/*.cpp")
+
+target_sources(test
+    PRIVATE 
+        ${RENDERER-TEST-SOURCES}
+        ${WAYLAND_CLIENT_INCLUDE_DIR}
 )
 
 target_sources(out
@@ -64,5 +74,13 @@ target_link_libraries(out
     PRIVATE
         2d-renderer
         xdg-shell
+        ${WAYLAND_CLIENT_LIBRARY}
+)
+
+target_link_libraries(test
+    PRIVATE
+        2d-renderer
+        xdg-shell
+        doctest
         ${WAYLAND_CLIENT_LIBRARY}
 )
