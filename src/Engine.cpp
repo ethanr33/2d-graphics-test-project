@@ -9,6 +9,10 @@ void Engine::draw(const Primitive& p) {
     renderer.add_primitive(p);
 }
 
+void Engine::translate_viewport(double dx, double dy) {
+    renderer.translate_absolute(dx, dy);
+}
+
 bool Engine::is_active() const {
     return this->app_window.dispatch() != -1;
 }

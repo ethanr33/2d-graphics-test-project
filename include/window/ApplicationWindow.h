@@ -39,7 +39,7 @@ class ApplicationWindow {
         wl_seat_listener seat_listener;
         wl_pointer_listener pointer_listener;
 
-        const FrameBuffer* frame_buffer;
+        const FrameBuffer* frame_buffer; // Not owned by this object
 
         MouseState mouse_state;
 

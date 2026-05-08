@@ -25,6 +25,11 @@ class Engine {
         void draw(const Primitive&);
 
         /**
+         * @brief Translates viewport by (dx, dy) screen pixels
+         */
+        void translate_viewport(double, double);
+
+        /**
          * @brief Gets if engine is active and running
          */
         bool is_active() const;

@@ -1,5 +1,19 @@
 
 #include "utils/Matrix.h"
+#include "utils/Exceptions.h"
+
+Matrix::Matrix(const Vector& v, bool augmented=true) {
+    this->rows = augmented ? 3 : 2;
+    this->cols = 1;
+
+    this->matrix = std::vector<std::vector<double>>(this->rows, std::vector<double>(this->cols));
+    this->set_element(0, 0, v.x);
+    this->set_element(1, 0, v.y);
+
+    if (augmented) {
+        this->set_element(2, 0, 1);
+    }
+}
 
 void Matrix::set_identity() {
     for (int i = 0; i < rows; i++) {
@@ -12,3 +26,48 @@ void Matrix::set_identity() {
         }
     }
 }
+
+Matrix& Matrix::operator+=(const Matrix& rhs) {
+    if (this->get_rows() != rhs.get_rows() || this->get_cols() != rhs.get_cols()) {
+        // Matrix dimensions must match to perform addition
+        throw MatrixSizeMismatchException(*this, rhs);
+    }
+
+    for (int i = 0; i < rhs.rows; i++) {
+        for (int j = 0; j < rhs.cols; j++) {
+            this->set_element(i, j, rhs.get_element(i, j) + this->get_element(i, j));
+        }
+    }
+
+    return *this;
+}
+
+const Matrix Matrix::operator+(const Matrix& rhs) const {
+    return Matrix(*this) += rhs;
+}
+
+const Matrix& Matrix::operator*(const Matrix& rhs) const {
+    int m = this->rows;
+    int n = this->cols;
+    int k = rhs.cols;
+
+    Matrix* M = new Matrix(m, k);
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < k; j++) {
+            double sum = 0;
+
+            for (int l = 0; l < n; l++) {
+                sum += this->get_element(i, l) * rhs.get_element(l, j);
+            }
+
+            M->set_element(i, j, sum);
+        }
+    }
+
+    return *M;
+}
+
+// const Vector& Matrix::operator*(const Vector& rhs) {
+//     return Matrix(*this) * (Matrix) Vector(rhs);
+// }

@@ -19,6 +19,10 @@ class Renderer {
         
         FrameBuffer front_buffer;
         FrameBuffer back_buffer;
+
+        // Has the renderer state been updated since last display() call?
+        // Useful for avoiding unnecessary command/fragment processing
+        bool state_updated = false;
     public:
         Renderer(int width, int height) : display_width(width), display_height(height), front_buffer(width, height), back_buffer(width, height) {}
 
@@ -31,6 +35,11 @@ class Renderer {
          * @brief Adds a new primitive to command stream
          */
         void add_primitive(const Primitive&);
+
+        /**
+         * @brief Translates viewport by (dx, dy) screen pixels
+         */
+        void translate_absolute(double, double);
 
         /**
          * @brief Updates front frame buffer with the most recent primitives added since last clear()

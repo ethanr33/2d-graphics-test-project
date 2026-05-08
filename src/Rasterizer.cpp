@@ -9,8 +9,12 @@
 
 void Rasterizer::make_and_render_fragments(const std::vector<Command>& commands, FrameBuffer& buffer) {
     for (const Command& c : commands) {
-        PRIMITIVE_TYPE ptype = c.get_primitive().type;
-        Vertex v1 = c.get_primitive().vertices[0];
+        PRIMITIVE_TYPE ptype = c.primitive.type;
+        Vertex v1 = c.primitive.vertices[0];
+
+        if (!buffer.is_in_bounds(v1.pos.x, v1.pos.y)) {
+            continue;
+        }
 
         switch (ptype) {
             case PRIMITIVE_TYPE::POINT:

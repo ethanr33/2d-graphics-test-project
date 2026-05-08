@@ -21,4 +21,8 @@ class FrameBuffer {
         inline const std::vector<Color>& get_frame_buffer() const {
             return this->frame_buffer;
         }
+
+        bool is_in_bounds(int x, int y) const {
+            return x >= 0 && x < width && y >= 0 && y < height;
+        }
 };

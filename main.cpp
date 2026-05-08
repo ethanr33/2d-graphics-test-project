@@ -22,7 +22,6 @@ int main() {
         }
     }
 
-
     while (e.is_active()) {
         e.tick();
 
