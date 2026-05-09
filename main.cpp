@@ -12,13 +12,19 @@ int main() {
 
     Engine e{width, height};
 
+    e.translate_viewport(300, 300);
+    e.translate_viewport(-300, -300);
+
     int frame_count = 0;
 
     std::chrono::high_resolution_clock::time_point begin = std::chrono::high_resolution_clock::now();
     
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            e.draw(Primitive(PRIMITIVE_TYPE::POINT, Vertex(j, i)));
+            Primitive p = Primitive(PRIMITIVE_TYPE::POINT, Vertex(j, i));
+            p.color = Color(rand() % 256, rand() % 256, rand() % 256);
+
+            e.draw(p);
         }
     }
 

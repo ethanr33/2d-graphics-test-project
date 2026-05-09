@@ -18,7 +18,7 @@ void Rasterizer::make_and_render_fragments(const std::vector<Command>& commands,
 
         switch (ptype) {
             case PRIMITIVE_TYPE::POINT:
-                buffer.update_pixel(v1.pos.x, v1.pos.y, Color(0, 255, 0));
+                buffer.update_pixel(v1.pos.x, v1.pos.y, c.primitive.color);
                 break;
             default:
                 break;
