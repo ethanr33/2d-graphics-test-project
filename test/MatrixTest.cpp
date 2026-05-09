@@ -1,6 +1,27 @@
 
 #include "utils/Matrix.h"
+#include "utils/Exceptions.h"
 #include "doctest.h"
+
+TEST_CASE("Check setting identity matrix") {
+    const int NUM_SIZES = 5;
+    int sizes[NUM_SIZES] = {1, 2, 5, 10, 100};
+
+    for (int i = 0; i < NUM_SIZES; i++) {
+        Matrix m(sizes[i], sizes[i]);
+        m.set_identity();
+        for (int j = 0; j < i; j++) {
+            for (int k = 0; k < i; k++) {
+                if (j != k) {
+                    CHECK(m.get_element(j, k) == 0);
+                } else {
+                    CHECK(m.get_element(j, k) == 1);
+                }
+            }
+        }
+    }
+
+}
 
 TEST_CASE("Check + operator") {
 
@@ -56,9 +77,44 @@ TEST_CASE("Check + operator") {
         CHECK(m3.get_element(2, 1) == 10);
         CHECK(m3.get_element(2, 2) == 24);
     }
+
+    SUBCASE("Adding matrices of different size") {
+        Matrix m1(2, 3);
+        Matrix m2(1, 4);
+
+        CHECK_THROWS_AS(m1 + m2, MatrixSizeMismatchException);
+
+        Matrix m3(3, 3);
+
+        CHECK_THROWS_AS(m1 + m3, MatrixSizeMismatchException);
+    }
+
+    SUBCASE("Mul;tiplying matrices of different size") {
+        Matrix m1(2, 3);
+        Matrix m2(1, 4);
+
+        CHECK_THROWS_AS(m1 * m2, MatrixSizeMismatchException);
+
+        Matrix m3(2, 4);
+
+        CHECK_THROWS_AS(m1 * m3, MatrixSizeMismatchException);
+    }
 }
 
 TEST_CASE("Check += operator") {
+    SUBCASE("Adding 1x1 matrices") {
+        Matrix m1(1, 1);
+        m1.set_element(0, 0, 2);
+
+        Matrix m2(1, 1);
+        m2.set_element(0, 0, 3);
+
+        m1 += m2;
+
+        CHECK(m1.get_rows() == 1);
+        CHECK(m1.get_cols() == 1);
+        CHECK(m1.get_element(0, 0) == 5);
+    }
 
 }
 
@@ -118,8 +174,4 @@ TEST_CASE("Check * operator") {
         CHECK(m3.get_element(1, 0) == 7);
     }
 
-}
-
-TEST_CASE("Check *= operator") {
-    
 }

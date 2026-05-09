@@ -51,6 +51,10 @@ const Matrix& Matrix::operator*(const Matrix& rhs) const {
     int n = this->cols;
     int k = rhs.cols;
 
+    if (this->cols != rhs.rows) {
+        throw MatrixSizeMismatchException(*this, rhs);
+    }
+
     Matrix* M = new Matrix(m, k);
 
     for (int i = 0; i < m; i++) {
@@ -67,7 +71,3 @@ const Matrix& Matrix::operator*(const Matrix& rhs) const {
 
     return *M;
 }
-
-// const Vector& Matrix::operator*(const Vector& rhs) {
-//     return Matrix(*this) * (Matrix) Vector(rhs);
-// }

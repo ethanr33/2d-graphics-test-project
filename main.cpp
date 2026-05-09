@@ -12,8 +12,7 @@ int main() {
 
     Engine e{width, height};
 
-    e.translate_viewport(300, 300);
-    e.translate_viewport(-300, -300);
+    e.translate_viewport(-100, -100);
 
     int frame_count = 0;
 
