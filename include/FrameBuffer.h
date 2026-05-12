@@ -22,7 +22,15 @@ class FrameBuffer {
             return this->frame_buffer;
         }
 
-        bool is_in_bounds(int x, int y) const {
+        bool is_in_bounds(int x, int y) const noexcept {
             return x >= 0 && x < width && y >= 0 && y < height;
+        }
+
+        void reset_buffer(const Color& fill_color) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    this->update_pixel(j, i, fill_color);
+                }
+            }
         }
 };

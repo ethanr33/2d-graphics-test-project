@@ -12,16 +12,14 @@ int main() {
 
     Engine e{width, height};
 
-    e.translate_viewport(-100, -100);
-
     int frame_count = 0;
 
     std::chrono::high_resolution_clock::time_point begin = std::chrono::high_resolution_clock::now();
     
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            Primitive p = Primitive(PRIMITIVE_TYPE::POINT, Vertex(j, i));
-            p.color = Color(rand() % 256, rand() % 256, rand() % 256);
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 100; j++) {
+            Primitive p = Primitive(PRIMITIVE_TYPE::POINT, Vertex(i + 500, j + 500));
+            p.color = Color(0, 0, 255);
 
             e.draw(p);
         }
@@ -29,6 +27,8 @@ int main() {
 
     while (e.is_active()) {
         e.tick();
+
+        e.translate_viewport(1, 0);
 
         auto micros = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - begin).count();
 

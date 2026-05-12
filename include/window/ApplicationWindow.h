@@ -27,7 +27,7 @@ class ApplicationWindow {
         xdg_toplevel* toplevel;
 
         wl_seat* seat;
-        wl_pointer* pointer;
+        wl_pointer* pointer = nullptr;
 
         std::string window_title;
 

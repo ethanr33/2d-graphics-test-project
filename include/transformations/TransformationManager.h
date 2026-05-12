@@ -10,17 +10,25 @@
 class TransformationManager {
     private:
         Matrix transformation_matrix;
+
+        std::vector<Command> transformed_commands;
     public:
-        TransformationManager() : transformation_matrix(3, 3) {
-            this->transformation_matrix.set_identity();
-        }
+        TransformationManager() : transformation_matrix(3, 3, true) {}
 
         void add_translation(double, double);
 
-        void apply_transformations(std::vector<Command>&) const;
+        void apply_transformations(const std::vector<Command>&);
+
+        const std::vector<Command> get_transformed_commands() const noexcept {
+            return transformed_commands;
+        }
+
+        void clear_transformed_commands() {
+            this->transformed_commands.clear();
+        }
 
         /**
-         * Resets transformation_matrix
+         * Resets transformations and clears transformed commands
          */
         void reset();
 };

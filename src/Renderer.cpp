@@ -6,8 +6,13 @@ void Renderer::display() {
     front_buffer = back_buffer;
 
     if (this->state_updated) {
+        back_buffer.reset_buffer(Color(0, 0, 0));
+
+        rasterizer.reset();
+        transformation_manager.clear_transformed_commands();
+
         transformation_manager.apply_transformations(command_stream.get_command_stream());
-        rasterizer.make_and_render_fragments(command_stream.get_command_stream(), this->back_buffer);
+        rasterizer.make_and_render_fragments(this->transformation_manager.get_transformed_commands(), this->back_buffer);
 
         this->state_updated = false;
     }
@@ -17,7 +22,6 @@ void Renderer::display() {
 void Renderer::clear() {
     rasterizer.reset();
     command_stream.reset();
-    transformation_manager.reset();
     this->state_updated = true;
 }
 

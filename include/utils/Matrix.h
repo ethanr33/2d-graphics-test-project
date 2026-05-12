@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 #include <iostream>
 
@@ -9,26 +10,20 @@ struct Vector;
 
 class Matrix {
     private:
-        int rows;
-        int cols;
+        uint32_t rows;
+        uint32_t cols;
 
         std::vector<std::vector<double>> matrix;
-
-        // Handle case where matrix is not square
     public:
-        Matrix(int rows, int cols, bool identity=false) : rows(rows), cols(cols), matrix(rows, std::vector<double>(cols, 0)) {
-            if (identity) {
-                set_identity();
-            }
-        }
+        Matrix(uint32_t rows, uint32_t cols, bool identity=false);
 
         Matrix(const Vector&, bool);
 
-        inline int get_rows() const {
+        inline int get_rows() const noexcept {
             return rows;
         }
 
-        inline int get_cols() const {
+        inline int get_cols() const noexcept {
             return cols;
         }
 

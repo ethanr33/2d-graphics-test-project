@@ -113,6 +113,8 @@ void wl_seat_capabilities(void* data, wl_seat* seat, uint32_t capabilities) {
 
     ApplicationWindow* app = (ApplicationWindow*) data;
 
+    printf("%b\n", has_pointer);
+
     if (has_pointer && app->pointer == nullptr) {
         // If a pointer is available on the seat and the pointer has not been added yet
         app->pointer = wl_seat_get_pointer(seat);

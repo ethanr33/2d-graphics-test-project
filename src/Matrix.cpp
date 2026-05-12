@@ -2,6 +2,21 @@
 #include "utils/Matrix.h"
 #include "utils/Exceptions.h"
 
+Matrix::Matrix(uint32_t rows, uint32_t cols, bool identity) {
+    if (rows == 0 || cols == 0) {
+        throw InvalidMatrixConstructionException(rows, cols);
+    }
+
+    this->rows = rows;
+    this->cols = cols;
+
+    this->matrix = std::vector<std::vector<double>>(3, std::vector<double>(3));
+
+    if (identity) {
+        set_identity();
+    }
+}
+
 Matrix::Matrix(const Vector& v, bool augmented=true) {
     this->rows = augmented ? 3 : 2;
     this->cols = 1;
