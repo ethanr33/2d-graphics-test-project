@@ -16,13 +16,14 @@ int main() {
         for (int j = 0; j < 100; j++) {
             Primitive p = Primitive(PRIMITIVE_TYPE::POINT, Vertex(i + 500, j + 500));
             p.color = Color(0, 0, 255);
+            p.apply_translation(-5000, -5000);
 
             e.draw(p);
         }
     }
 
     while (e.is_active()) {
-
+        e.tick();
     }
 
 }

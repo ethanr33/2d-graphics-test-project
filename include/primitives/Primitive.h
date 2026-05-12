@@ -19,5 +19,10 @@ struct Primitive {
         Primitive(PRIMITIVE_TYPE type, const Vertex& v1) : type(type), color(0, 0, 0) {
             vertices[0] = v1;
         }
+
+        /**
+         * @brief Applies translation transformation to all vertices of object
+         */
+        void apply_translation(double dx, double dy);
 };
 
