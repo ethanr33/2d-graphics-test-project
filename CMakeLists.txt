@@ -5,7 +5,7 @@ project(2dRenderer)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-add_compile_options(-O3 -g -fno-omit-frame-pointer)
+add_compile_options(-g -fno-omit-frame-pointer)
 
 add_executable(out)
 add_executable(test)
