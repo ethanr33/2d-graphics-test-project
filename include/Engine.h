@@ -49,6 +49,7 @@ class Engine {
 
         /**
          * @brief Translates viewport by (dx, dy) screen pixels
+         * Essentially changes the top left corner coordinates from (x, y) to (x + dx, y + dy)
          */
         void translate_viewport(double, double);
 

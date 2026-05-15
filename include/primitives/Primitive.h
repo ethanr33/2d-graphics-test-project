@@ -20,6 +20,11 @@ struct Primitive {
             vertices[0] = v1;
         }
 
+        Primitive(PRIMITIVE_TYPE type, const Vertex& v1, const Vertex& v2) : type(type), color(0, 0, 0) {
+            vertices[0] = v1;
+            vertices[1] = v2;
+        }
+
         /**
          * @brief Applies translation transformation to all vertices of object
          */

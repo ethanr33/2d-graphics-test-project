@@ -12,7 +12,9 @@ void Renderer::display() {
         transformation_manager.clear_transformed_commands();
 
         transformation_manager.apply_transformations(command_stream.get_command_stream());
-        rasterizer.make_and_render_fragments(this->transformation_manager.get_transformed_commands(), this->back_buffer);
+
+        rasterizer.make_fragments(this->transformation_manager.get_transformed_commands());
+        rasterizer.render_fragments(this->back_buffer);
 
         this->state_updated = false;
     }
