@@ -10,7 +10,7 @@ Matrix::Matrix(uint32_t rows, uint32_t cols, bool identity) {
     this->rows = rows;
     this->cols = cols;
 
-    this->matrix = std::vector<std::vector<double>>(3, std::vector<double>(3));
+    this->matrix = std::vector<std::vector<double>>(rows, std::vector<double>(cols, 0));
 
     if (identity) {
         set_identity();

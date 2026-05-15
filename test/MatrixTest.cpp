@@ -3,6 +3,24 @@
 #include "utils/Exceptions.h"
 #include "doctest.h"
 
+TEST_CASE("Check constructor") {
+    SUBCASE("Construct from rows, cols") {
+        SUBCASE("Valid construction") {
+            Matrix m1(2, 7);
+
+            CHECK(m1.get_rows() == 2);
+            CHECK(m1.get_cols() == 7);
+        }
+
+        SUBCASE("Construction with rows or cols = 0") {
+            CHECK_THROWS_AS(Matrix(0, 8), InvalidMatrixConstructionException);
+            CHECK_THROWS_AS(Matrix(8, 0), InvalidMatrixConstructionException);
+            CHECK_THROWS_AS(Matrix(0, 0), InvalidMatrixConstructionException);
+        }
+
+    }
+}
+
 TEST_CASE("Check setting identity matrix") {
     const int NUM_SIZES = 5;
     int sizes[NUM_SIZES] = {1, 2, 5, 10, 100};
@@ -10,8 +28,8 @@ TEST_CASE("Check setting identity matrix") {
     for (int i = 0; i < NUM_SIZES; i++) {
         Matrix m(sizes[i], sizes[i]);
         m.set_identity();
-        for (int j = 0; j < i; j++) {
-            for (int k = 0; k < i; k++) {
+        for (int j = 0; j < sizes[i]; j++) {
+            for (int k = 0; k < sizes[i]; k++) {
                 if (j != k) {
                     CHECK(m.get_element(j, k) == 0);
                 } else {
