@@ -10,7 +10,7 @@ int main() {
     int width = 1920;
     int height = 1080;
 
-    Engine e{width, height, true};
+    Engine e{width, height};
     
     Primitive p = Primitive(PRIMITIVE_TYPE::LINE, Vertex(-100, -100), Vertex(200, 100));
     Primitive p2 = Primitive(PRIMITIVE_TYPE::LINE, Vertex(200, 100), Vertex(200, 600));
