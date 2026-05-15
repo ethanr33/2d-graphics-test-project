@@ -20,4 +20,12 @@ struct Color {
     uint32_t to_hex() const {
         return (alpha << 24) | (red << 16) | (green << 8) | blue;
     }
+
+    bool operator==(const Color& rhs) const {
+        return this->to_hex() == rhs.to_hex();
+    }
+
+    bool operator!=(const Color& rhs) const {
+        return !(*this == rhs);
+    }
 };

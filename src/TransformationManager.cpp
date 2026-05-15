@@ -4,8 +4,8 @@
 void TransformationManager::add_translation(double dx, double dy) {
         Matrix translation_matrix(3, 3);
         translation_matrix.set_identity();
-        translation_matrix.set_element(0, 2, -dx);
-        translation_matrix.set_element(1, 2, -dy);
+        translation_matrix.set_element(0, 2, dx);
+        translation_matrix.set_element(1, 2, dy);
 
         transformation_matrix = translation_matrix * transformation_matrix;
 }
