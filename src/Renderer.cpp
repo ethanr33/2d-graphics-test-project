@@ -33,7 +33,7 @@ void Renderer::add_primitive(const Primitive& p) {
 }
 
 void Renderer::translate_absolute(double dx, double dy) {
-    this->transformation_manager.add_translation(dx, dy);
+    this->transformation_manager.add_translation(-dx, -dy);
     this->state_updated = true;
 }
 

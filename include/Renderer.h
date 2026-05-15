@@ -37,7 +37,7 @@ class Renderer {
         void add_primitive(const Primitive&);
 
         /**
-         * @brief Translates viewport by (dx, dy) screen pixels
+         * @brief Translates viewport top left corner from (x, y) to (x + dx, y + dy)
          */
         void translate_absolute(double, double);
 

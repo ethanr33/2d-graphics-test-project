@@ -16,13 +16,22 @@ struct Primitive {
 
         PRIMITIVE_TYPE type;  
 
+        // Point constructor
         Primitive(PRIMITIVE_TYPE type, const Vertex& v1) : type(type), color(0, 0, 0) {
             vertices[0] = v1;
         }
 
-        Primitive(PRIMITIVE_TYPE type, const Vertex& v1, const Vertex& v2) : type(type), color(0, 0, 0) {
+        // Line constructor
+        Primitive(PRIMITIVE_TYPE type, const Vertex& start, const Vertex& end) : type(type), color(0, 0, 0) {
+            vertices[0] = start;
+            vertices[1] = end;
+        }
+
+        // Triangle constructor
+        Primitive(PRIMITIVE_TYPE type, const Vertex& v1, const Vertex& v2, const Vertex& v3) : type(type), color(0, 0, 0) {
             vertices[0] = v1;
             vertices[1] = v2;
+            vertices[2] = v3;
         }
 
         /**
