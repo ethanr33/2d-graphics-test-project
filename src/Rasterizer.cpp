@@ -57,6 +57,93 @@ void Rasterizer::plot_line_high(int x0, int y0, int x1, int y1, Color color) {
     }
 }
 
+void Rasterizer::fill_bottom_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color) {
+    // Assumes v2.y == v3.y
+
+    float invslope1 = (v2.pos.x - v1.pos.x) / (v2.pos.y - v1.pos.y);
+    float invslope2 = (v3.pos.x - v1.pos.x) / (v3.pos.y - v1.pos.y);
+
+    float curx1 = v1.pos.x;
+    float curx2 = v1.pos.x;
+
+    for (int scanlineY = v1.pos.y; scanlineY <= v2.pos.y; scanlineY++) {
+        Primitive p(PRIMITIVE_TYPE::LINE, Vertex(curx1, scanlineY), Vertex(curx2, scanlineY));
+        p.color = Color(255, 0, 0);
+        this->make_line_fragments(p);
+        
+        curx1 += invslope1;
+        curx2 += invslope2;
+    }
+}
+
+void Rasterizer::fill_top_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color) {
+    // Assumes v1.y == v2.y
+
+    float invslope1 = (v3.pos.x - v1.pos.x) / (v3.pos.y - v1.pos.y);
+    float invslope2 = (v3.pos.x - v2.pos.x) / (v3.pos.y - v2.pos.y);
+
+    float curx1 = v3.pos.x;
+    float curx2 = v3.pos.x;
+
+    for (int scanlineY = v3.pos.y; scanlineY > v1.pos.y; scanlineY--) {
+        Primitive p(PRIMITIVE_TYPE::LINE, Vertex(curx1, scanlineY), Vertex(curx2, scanlineY));
+        p.color = Color(255, 0, 0);
+        this->make_line_fragments(p);
+        curx1 -= invslope1;
+        curx2 -= invslope2;
+    }
+}
+
+void Rasterizer::make_triangle_fragments(const Primitive& triangle) {
+    Vertex v1, v2, v3;
+
+    // Make sure v1.y <= v2.y <= v3.y
+    if (triangle.vertices[0].pos.y <= triangle.vertices[1].pos.y && triangle.vertices[0].pos.y <= triangle.vertices[2].pos.y) {
+        v1 = triangle.vertices[0];
+
+        if (triangle.vertices[1].pos.y <= triangle.vertices[2].pos.y) {
+            v2 = triangle.vertices[1];
+            v3 = triangle.vertices[2];
+        } else {
+            v2 = triangle.vertices[2];
+            v3 = triangle.vertices[1];
+        }
+    } else if (triangle.vertices[1].pos.y <= triangle.vertices[0].pos.y && triangle.vertices[1].pos.y <= triangle.vertices[2].pos.y) {
+        v1 = triangle.vertices[1];
+
+        if (triangle.vertices[0].pos.y <= triangle.vertices[2].pos.y) {
+            v2 = triangle.vertices[0];
+            v3 = triangle.vertices[2];
+        } else {
+            v2 = triangle.vertices[2];
+            v3 = triangle.vertices[0];
+        }
+    } else {
+        v1 = triangle.vertices[2];
+
+        if (triangle.vertices[0].pos.y <= triangle.vertices[1].pos.y) {
+            v2 = triangle.vertices[0];
+            v3 = triangle.vertices[1];
+        } else {
+            v2 = triangle.vertices[1];
+            v3 = triangle.vertices[0];
+        }
+    }
+
+
+    if (v2.pos.y == v3.pos.y) {
+        this->fill_bottom_flat_triangle(v1, v2, v3, triangle.color);
+    } else if (v1.pos.y == v2.pos.y) {
+        this->fill_top_flat_triangle(v1, v2, v3, triangle.color);
+    } else {
+        Vertex v4 = Vertex((int)(v1.pos.x + ((float)(v2.pos.y - v1.pos.y) / (float)(v3.pos.y - v1.pos.y)) * (v3.pos.x - v1.pos.x)), v2.pos.y);
+        this->fill_bottom_flat_triangle(v1, v2, v4, triangle.color);
+        this->fill_top_flat_triangle(v2, v4, v3, triangle.color);
+    }
+
+
+}
+
 void Rasterizer::make_line_fragments(const Primitive& line) {
     int x0 = line.vertices[0].pos.x;
     int y0 = line.vertices[0].pos.y;
@@ -90,6 +177,8 @@ void Rasterizer::make_fragments(const std::vector<Command>& commands) {
             case PRIMITIVE_TYPE::LINE:
                 this->make_line_fragments(c.primitive);
                 break;
+            case PRIMITIVE_TYPE::TRIANGLE:
+                this->make_triangle_fragments(c.primitive);
             default:
                 break;
         }

@@ -15,13 +15,15 @@ void TransformationManager::apply_transformations(const std::vector<Command>& co
         PRIMITIVE_TYPE type = c.primitive.type;
 
         Command new_command{c};
-        
 
         new_command.primitive.vertices[0].pos.x = transformation_matrix.get_element(0, 0) * c.primitive.vertices[0].pos.x + transformation_matrix.get_element(0, 1) * c.primitive.vertices[0].pos.y + transformation_matrix.get_element(0, 2);
         new_command.primitive.vertices[0].pos.y = transformation_matrix.get_element(1, 0) * c.primitive.vertices[0].pos.x + transformation_matrix.get_element(1, 1) * c.primitive.vertices[0].pos.y + transformation_matrix.get_element(1, 2);  
     
         new_command.primitive.vertices[1].pos.x = transformation_matrix.get_element(0, 0) * c.primitive.vertices[1].pos.x + transformation_matrix.get_element(0, 1) * c.primitive.vertices[1].pos.y + transformation_matrix.get_element(0, 2);
         new_command.primitive.vertices[1].pos.y = transformation_matrix.get_element(1, 0) * c.primitive.vertices[1].pos.x + transformation_matrix.get_element(1, 1) * c.primitive.vertices[1].pos.y + transformation_matrix.get_element(1, 2);  
+
+        new_command.primitive.vertices[2].pos.x = transformation_matrix.get_element(0, 0) * c.primitive.vertices[2].pos.x + transformation_matrix.get_element(0, 1) * c.primitive.vertices[2].pos.y + transformation_matrix.get_element(0, 2);
+        new_command.primitive.vertices[2].pos.y = transformation_matrix.get_element(1, 0) * c.primitive.vertices[2].pos.x + transformation_matrix.get_element(1, 1) * c.primitive.vertices[2].pos.y + transformation_matrix.get_element(1, 2); 
 
         this->transformed_commands.push_back(new_command);
     }

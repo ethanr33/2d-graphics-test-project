@@ -11,9 +11,10 @@ int main() {
     int height = 1080;
 
     Engine e{width, height};
-
-    Primitive p1 = Primitive(PRIMITIVE_TYPE::LINE, Vertex(0, 0), Vertex(1000, 700));
+    Primitive p1 = Primitive(PRIMITIVE_TYPE::TRIANGLE, Vertex(100, 100), Vertex(1000, 600), Vertex(200, 700));
     p1.color = Color(255, 0, 0);
+
+    p1.apply_translation(-200, 0);
 
     e.draw(p1);
 
