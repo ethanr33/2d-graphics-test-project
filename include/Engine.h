@@ -42,10 +42,22 @@ class Engine {
          */
         void tick();
 
-        /**
-         * @brief Draws a primitive
-         */
         void draw(const Primitive&);
+
+        /**
+         * @brief Draws a point
+         */
+        void draw_point(const Vertex&, Color);
+
+        /**
+         * @brief Draws a line
+         */
+        void draw_line(const Vertex& start, const Vertex& end, Color);
+
+        /**
+         * @brief Draws a triangle
+         */
+        void draw_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color);
 
         /**
          * @brief Translates viewport by (dx, dy) screen pixels

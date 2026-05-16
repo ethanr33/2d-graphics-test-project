@@ -11,6 +11,27 @@ void Engine::draw(const Primitive& p) {
     renderer.add_primitive(p);
 }
 
+void Engine::draw_point(const Vertex& v1, Color color) {
+    Primitive p = Primitive(PRIMITIVE_TYPE::POINT, v1);
+    p.color = color;
+
+    renderer.add_primitive(p);
+}
+
+void Engine::draw_line(const Vertex& v1, const Vertex& v2, Color color) {
+    Primitive p = Primitive(PRIMITIVE_TYPE::LINE, v1, v2);
+    p.color = color;
+
+    renderer.add_primitive(p);
+}
+
+void Engine::draw_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color) {
+    Primitive p = Primitive(PRIMITIVE_TYPE::TRIANGLE, v1, v2, v3);
+    p.color = color;
+
+    renderer.add_primitive(p);
+}
+
 void Engine::translate_viewport(double dx, double dy) {
     renderer.translate_absolute(dx, dy);
 }
