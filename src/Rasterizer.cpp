@@ -68,7 +68,8 @@ void Rasterizer::fill_bottom_flat_triangle(const Vertex& v1, const Vertex& v2, c
 
     for (int scanlineY = v1.pos.y; scanlineY <= v2.pos.y; scanlineY++) {
         Primitive p(PRIMITIVE_TYPE::LINE, Vertex(curx1, scanlineY), Vertex(curx2, scanlineY));
-        p.color = Color(255, 0, 0);
+        p.color = color;
+        
         this->make_line_fragments(p);
         
         curx1 += invslope1;
@@ -87,7 +88,7 @@ void Rasterizer::fill_top_flat_triangle(const Vertex& v1, const Vertex& v2, cons
 
     for (int scanlineY = v3.pos.y; scanlineY > v1.pos.y; scanlineY--) {
         Primitive p(PRIMITIVE_TYPE::LINE, Vertex(curx1, scanlineY), Vertex(curx2, scanlineY));
-        p.color = Color(255, 0, 0);
+        p.color = color;
         this->make_line_fragments(p);
         curx1 -= invslope1;
         curx2 -= invslope2;
