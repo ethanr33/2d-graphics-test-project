@@ -73,7 +73,7 @@ class Engine {
         /**
          * @brief Adds a event handler for the corresponding event type
          */
-        void add_event_handler(EVENT_TYPE, std::function<void(MouseState)>);
+        void add_mouse_event_handler(MOUSE_EVENT_TYPE, std::function<void(MouseState)>);
 
         ~Engine();
 };

@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <cstring>
 #include <unistd.h>
+#include <linux/input-event-codes.h>
 
 #include "window/ApplicationWindow.h"
 
@@ -54,8 +55,6 @@ int allocate_shm_file(size_t size) {
 }
 
 void registry_handle_global(void* data, struct wl_registry *registry, uint32_t name, const char *interface, uint32_t version) {
-	printf("interface: '%s', version: %d, name: %d\n", interface, version, name);
-
     ApplicationWindow* app = (ApplicationWindow*) data;
     if (strcmp(interface, wl_compositor_interface.name) == 0) {
         app->compositor = (wl_compositor*) wl_registry_bind(registry, name, &wl_compositor_interface, 4);
@@ -113,8 +112,6 @@ void wl_seat_capabilities(void* data, wl_seat* seat, uint32_t capabilities) {
 
     ApplicationWindow* app = (ApplicationWindow*) data;
 
-    printf("%b\n", has_pointer);
-
     if (has_pointer && app->pointer == nullptr) {
         // If a pointer is available on the seat and the pointer has not been added yet
         app->pointer = wl_seat_get_pointer(seat);
@@ -151,14 +148,50 @@ void wl_pointer_motion(void* data, struct wl_pointer* pointer, uint32_t time, wl
 void wl_pointer_button(void* data, wl_pointer* pointer, uint32_t serial, uint32_t time, uint32_t button, uint32_t state) {
     ApplicationWindow* app = (ApplicationWindow*) data;
 
-    if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
-        app->mouse_pressed_handler.invoke(app->mouse_state);
+    // state == 0 means released, state == 1 means pressed
+    bool is_pressed = (state == 1);
+
+    switch (button) {
+        case BTN_LEFT:
+            if (is_pressed) {
+                app->get_mouse_event_handler(MOUSE_EVENT_TYPE::MOUSE_LEFT_CLICK).invoke(app->mouse_state);
+            } else {
+                app->get_mouse_event_handler(MOUSE_EVENT_TYPE::MOUSE_LEFT_RELEASE).invoke(app->mouse_state);
+            }
+            break;
+        case BTN_RIGHT:
+            if (is_pressed) {
+                app->get_mouse_event_handler(MOUSE_EVENT_TYPE::MOUSE_RIGHT_CLICK).invoke(app->mouse_state);
+            } else {
+                app->get_mouse_event_handler(MOUSE_EVENT_TYPE::MOUSE_RIGHT_RELEASE).invoke(app->mouse_state);
+            }
+            break;
+        case BTN_MIDDLE:
+            if (is_pressed) {
+                app->get_mouse_event_handler(MOUSE_EVENT_TYPE::MOUSE_MIDDLE_CLICK).invoke(app->mouse_state);
+            } else {
+                app->get_mouse_event_handler(MOUSE_EVENT_TYPE::MOUSE_MIDDLE_RELEASE).invoke(app->mouse_state);
+            }
+        default:
+            break;
     }
 }
 
 void wl_pointer_frame(void* data, struct wl_pointer* pointer) {
 
 }
+
+SignalHandler<MouseState>& ApplicationWindow::get_mouse_event_handler(MOUSE_EVENT_TYPE type) {
+    if (this->mouse_event_handlers.find(type) == this->mouse_event_handlers.end()) {
+        this->mouse_event_handlers.insert({type, SignalHandler<MouseState>()});
+    }
+
+    return this->mouse_event_handlers.at(type);
+}
+
+ void ApplicationWindow::add_mouse_event_handler(MOUSE_EVENT_TYPE type, std::function<void(MouseState)> handler) {
+    this->get_mouse_event_handler(type).connect(handler);
+ }
 
 
 wl_buffer* ApplicationWindow::draw_frame() {
@@ -190,10 +223,6 @@ wl_buffer* ApplicationWindow::draw_frame() {
     munmap(data, size);
     wl_buffer_add_listener(buffer, &buffer_listener, NULL);
     return buffer;
-}
-
-SignalHandler<MouseState>* ApplicationWindow::get_mouse_pressed_handler() {
-    return &this->mouse_pressed_handler;
 }
 
 ApplicationWindow::ApplicationWindow(int width, int height, const std::string& window_title, const FrameBuffer* fb) {

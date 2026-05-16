@@ -3,6 +3,7 @@
 #include <wayland-client.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "FrameBuffer.h"
 #include "utils/SignalHandler.h"
@@ -10,7 +11,14 @@
 
 #include "../external/xdg-shell/xdg-shell-client-protocol.h"
 
-enum class EVENT_TYPE { MOUSE_PRESSED_EVENT };
+enum class MOUSE_EVENT_TYPE {
+    MOUSE_LEFT_CLICK,
+    MOUSE_LEFT_RELEASE,
+    MOUSE_RIGHT_CLICK,
+    MOUSE_RIGHT_RELEASE,
+    MOUSE_MIDDLE_CLICK,
+    MOUSE_MIDDLE_RELEASE
+};
 
 class ApplicationWindow {
     private:
@@ -43,7 +51,7 @@ class ApplicationWindow {
 
         MouseState mouse_state;
 
-        SignalHandler<MouseState> mouse_pressed_handler;
+        std::unordered_map<MOUSE_EVENT_TYPE, SignalHandler<MouseState>> mouse_event_handlers;
 
         friend void registry_handle_global(void*, wl_registry*, uint32_t, const char*, uint32_t);
         friend void registry_handle_global_remove(void*, wl_registry*, uint32_t);
@@ -76,7 +84,9 @@ class ApplicationWindow {
 
         void attach_frame_buffer(FrameBuffer*);
 
-        SignalHandler<MouseState>* get_mouse_pressed_handler();
+        SignalHandler<MouseState>& get_mouse_event_handler(MOUSE_EVENT_TYPE);
+
+        void add_mouse_event_handler(MOUSE_EVENT_TYPE, std::function<void(MouseState)>);
 
         ~ApplicationWindow();
 };
