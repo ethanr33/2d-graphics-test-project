@@ -12,8 +12,8 @@ class Rasterizer {
         std::vector<Fragment> fragments;
 
         // Helper functions for standard triangle rasterization algorithm
-        void fill_bottom_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color);
-        void fill_top_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color);
+        void fill_bottom_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color, uint32_t z_index);
+        void fill_top_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color, uint32_t z_index);
 
         /**
          * @brief Adds fragments needed to rasterize a triangle
@@ -22,8 +22,8 @@ class Rasterizer {
         void make_triangle_fragments(const Primitive&);
 
         // Bresenham's line drawing algorithm helper functions
-        void plot_line_low(int, int, int, int, Color);
-        void plot_line_high(int, int, int, int, Color);
+        void plot_line_low(int, int, int, int, Color, uint32_t z_index);
+        void plot_line_high(int, int, int, int, Color, uint32_t z_index);
 
         /**
          * @brief Adds fragments needed to render a line

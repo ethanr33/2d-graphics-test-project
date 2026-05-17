@@ -14,6 +14,14 @@ class FrameBuffer {
         FrameBuffer(int width, int height): width(width), height(height), frame_buffer(height * width) {}
         FrameBuffer(const FrameBuffer& buffer) : width(buffer.width), height(buffer.height), frame_buffer(buffer.frame_buffer) {}
 
+        int get_width() const {
+            return width;
+        }
+
+        int get_height() const {
+            return height;
+        }
+
         inline void update_pixel(int x_pos, int y_pos, Color c) {
             this->frame_buffer.at(width * y_pos + x_pos) = c;
         }

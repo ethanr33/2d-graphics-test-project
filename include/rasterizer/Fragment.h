@@ -8,6 +8,7 @@ struct Fragment {
     int32_t x;
     int32_t y;
     Color color;
+    uint32_t z_index;
 
-    Fragment(int32_t x, int32_t y, Color color) : x(x), y(y), color(color) {}
+    Fragment(int32_t x, int32_t y, Color color, uint32_t z_index) : x(x), y(y), color(color), z_index(z_index) {}
 };
